@@ -3,13 +3,13 @@ This script extracts and ranks the sentences and words of an article.
 
 IT is inspired by the tf-idf algorithm.
 """
-
+import logging
 from collections import Counter
 
 import spacy
+from spacy import Language
 
 # The stop words files.
-ES_STOPWORDS_FILE = "./assets/stopwords-es.txt"
 EN_STOPWORDS_FILE = "./assets/stopwords-en.txt"
 
 # The number of sentences we need.
@@ -39,9 +39,11 @@ COMMON_WORDS = {
 FINANCIAL_WORDS = ["$", "€", "£", "pesos", "dólar", "libras", "euros",
                    "dollar", "pound", "mdp", "mdd"]
 
-
-# Don't forget to specify the correct model for your language.
-NLP = spacy.load("es_core_news_sm")
+NLP: Language
+try:
+    NLP = spacy.load("en_core_web_sm")
+except Exception:
+    logging.exception("Failed")
 
 
 def add_extra_words():
@@ -52,10 +54,6 @@ def add_extra_words():
     https://github.com/stopwords-iso/stopwords-es
     https://github.com/stopwords-iso/stopwords-en
     """
-
-    with open(ES_STOPWORDS_FILE, "r", encoding="utf-8") as temp_file:
-        for word in temp_file.read().splitlines():
-            COMMON_WORDS.add(word)
 
     with open(EN_STOPWORDS_FILE, "r", encoding="utf-8") as temp_file:
         for word in temp_file.read().splitlines():
@@ -106,7 +104,7 @@ def get_summary(article):
 
     top_sentences = get_top_sentences(article_sentences, scored_words)
     top_sentences_length = sum([len(sentence) for sentence in top_sentences])
-    reduction = 100 - (top_sentences_length / len(cleaned_article)) * 100
+    reduction = (100 - (top_sentences_length / len(cleaned_article)) * 100 if len(cleaned_article) > 0 else 0)
 
     summary_dict = {
         "top_words": get_top_words(scored_words),
@@ -190,7 +188,7 @@ def get_top_sentences(article_sentences, scored_words):
 
     Parameters
     ----------
-    cleaned_article : str
+    article_sentences : str
         The original article after it has been cleaned and reformatted.
 
     scored_words : collections.Counter
@@ -205,12 +203,11 @@ def get_top_sentences(article_sentences, scored_words):
 
     # Now its time to score each sentence.
     scored_sentences = list()
-
     # We take a reference of the order of the sentences, this will be used later.
     for index, sent in enumerate(article_sentences):
 
         # In some edge cases we have duplicated sentences, we make sure that doesn't happen.
-        if sent.text not in [sent for score, index, sent in scored_sentences]:
+        if sent.text not in [sent2 for score, index2, sent2 in scored_sentences]:
             scored_sentences.append(
                 [score_line(sent, scored_words), index, sent.text])
 
@@ -224,7 +221,6 @@ def get_top_sentences(article_sentences, scored_words):
 
         # When the article is too small the sentences may come empty.
         if len(sentence) >= 3:
-
             # We clean the sentence and its index so we can sort in chronological order.
             top_sentences.append([index, sentence])
             counter += 1
