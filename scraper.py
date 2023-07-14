@@ -33,11 +33,11 @@ def scrape_html(html_source):
     soup = BeautifulSoup(html_source, "html5lib")
 
     # Then we extract the title and the article tags.
-    article_title = soup.find("title").text.replace("\n", " ").strip()
+    article_title = [soup.find("title").text.replace("\n", " ").strip() if not soup.find("title") is None else []]
 
     # If our title is too short we fallback to the first h1 tag.
     if len(article_title) <= 5:
-        article_title = soup.find("h1").text.replace("\n", " ").strip()
+        article_title = [soup.find("h1").text.replace("\n", " ").strip() if not soup.find("h1") is None else []]
 
     article_date = ""
 

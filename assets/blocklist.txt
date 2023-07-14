@@ -15,3 +15,6 @@ piped.video
 fmhy.ml
 sdf.org
 captiongenerator.com
+imgur.io
+lemmy.my.id
+ibb.co

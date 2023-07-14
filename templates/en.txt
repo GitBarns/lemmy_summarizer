@@ -8,5 +8,5 @@
 
 *****
 
-*^This ^bot ^only ^responds ^when ^it ^manages ^to ^summarize ^a ^minimum ^of ^50%. ^Your ^feedback, ^suggestions ^and ^comments ^are ^welcome. ​*
-[FAQ][GitHub](https://git.io/fhQkC) a fork of [summarizer](https://github.com/PhantomInsights/summarizer)|  |
+*^Your ^feedback, ^suggestions ^and ^comments ^are ^welcome*
+|[GitHub](https://git.io/fhQkC) a fork of [summarizer](https://github.com/PhantomInsights/summarizer)|

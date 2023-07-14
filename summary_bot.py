@@ -101,7 +101,7 @@ def run_bot(domain, username, password):
             try:
                 with requests.get(clean_url, headers=HEADERS, timeout=10) as response:
                     if response.headers['content-type'] in (
-                    'image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/mp4'):
+                            'image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/mp4'):
                         logging.info(f"BLOCK Content-Type: {response.headers['content-type']}")
                         update_log(post_id)
                         continue
@@ -119,7 +119,7 @@ def run_bot(domain, username, password):
 
                 summary_dict = summary.get_summary(article_body)
             except Exception:
-                logging.exception(f"Failed to process post {post_id}")
+                logging.exception(f"Failed to process post {post_id}:{post['ap_id']} for domain {domain}")
                 update_log(post_id)
                 continue
 
